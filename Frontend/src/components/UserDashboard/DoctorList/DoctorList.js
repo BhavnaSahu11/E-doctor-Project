@@ -1,13 +1,13 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./DoctorList.css"; // Custom CSS for Doctor List
 import CreateAppointment from './CreateAppointment';
 
-
 const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
   const [error, setError] = useState(null);
-  const [selectedDoctor, setSelectedDoctor] = useState(null); 
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
 
   useEffect(() => {
     axios
@@ -80,7 +80,7 @@ const DoctorList = () => {
             <div className="doctor-image-container">
               <img
                 src={`assets/img/${
-                  doctor.email.includes("male") ? "femaledoctor.png" : "maledoctor.png"
+                  doctor.gender === "Female" ? "femaledoctor.png" : "maledoctor.png"
                 }`}
                 alt="Doctor"
                 className="doctor-image"
@@ -88,9 +88,11 @@ const DoctorList = () => {
             </div>
             <div className="doctor-details">
               <p><strong>{doctor.doctorName || "Profile Not Updated"}</strong></p>
+              
               <p>Email: {doctor.email}</p>
               <p>Speciality: {doctor.speciality || "Not specified"}</p>
               <p>Location: {doctor.location || "Not specified"}</p>
+              <p>Gender: {doctor.gender || "Not specified"}</p>
               <p>Mobile: {doctor.mobileNo || "Not provided"}</p>
               <p>Hospital: {doctor.hospitalName || "Not specified"}</p>
               <p>Charge per Visit: ₹{doctor.chargedPerVisit || 0}</p>

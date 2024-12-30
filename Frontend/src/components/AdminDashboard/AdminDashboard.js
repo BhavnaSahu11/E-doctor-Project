@@ -120,7 +120,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DoctorList from "./DoctorList";
 import PatientList from "./PatientList";
+import UpdatePateint from "./UpdatePatient";
 import "./AdminDashboard.css";
+import UpdateDoctor from "./UpdateDoctor";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Dashboard");
@@ -196,6 +198,7 @@ const AdminDashboard = () => {
       mobileNo: mobileNo,
       hospitalName: hospitalName,
       chargedPerVisit: chargedPerVisit,
+      gender: gender,
       password: defaultPassword,
       role: "DOCTOR",
     };
@@ -254,12 +257,12 @@ const AdminDashboard = () => {
     <div className="dashboard-container">
       <div className="sidebar">
         <div className="profile-section">
-          <img src="assets/img/admin.png" alt="Admin" className="profile-picture" />
+          <img src="assets/img/image.png" alt="Admin" className="profile-picture" />
           <p className="admin-email">{adminEmail || "Loading Email..."}</p>
         </div>
         <ul className="menu-list">
           {/* {["Dashboard", "Manage Doctors", "Add Doctor", "Manage Patients", "Add Patient"].map((menu) => ( */}
-              {["Dashboard", "Add Doctors", "Delete Doctors", "Add Patients", "Delete Patients"].map((menu) => (
+              {["Dashboard","Patients","Doctors", "Add Doctors", "Manage Doctors", "Add Patients", "Manage Patients"].map((menu) => (
             <li
               key={menu}
               className={selectedMenu === menu ? "menu-item active" : "menu-item"}
@@ -294,7 +297,7 @@ const AdminDashboard = () => {
             </>
           )}
 
-          {selectedMenu === "Delete Doctors" && (
+          {selectedMenu === "Manage Doctors" && (
             <>
               {/* <h2>Doctor List</h2> */}
               <DoctorList />
@@ -302,6 +305,7 @@ const AdminDashboard = () => {
           )}
 
          
+
 {selectedMenu === "Add Doctors" && (
   <>
     <div className="form-container">
@@ -384,6 +388,24 @@ const AdminDashboard = () => {
           />
         </div>
 
+        {/* New Gender Field */}
+        <div className="form-group">
+          <label htmlFor="doctorGender">Gender</label>
+          <select
+            id="doctorGender"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            
+          >
+            <option value="" disabled>
+             Select Gender
+            </option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            
+          </select>
+        </div>
+
         <button type="submit">Add Doctor</button>
       </form>
     </div>
@@ -391,14 +413,28 @@ const AdminDashboard = () => {
 )}
 
 
-
-          {selectedMenu === "Delete Patients" && (
+          {selectedMenu === "Manage Patients" && (
             <>
             
               <PatientList />
             </>
           )}
+{/* add */}
 
+{selectedMenu === "Patients" && (
+            <>
+            
+              <UpdatePateint/>
+            </>
+          )}
+
+{selectedMenu === "Doctors" && (
+            <>
+            
+              <UpdateDoctor/>
+            </>
+          )}
+{/* add */}
 {selectedMenu === "Add Patients" && (
   <>
     <div className="form-container">
@@ -448,15 +484,23 @@ const AdminDashboard = () => {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="gender">Gender</label>
-          <input
-            type="text"
-            id="gender"
-            placeholder="Enter gender"
+       
+         <div className="form-group">
+          <label htmlFor="doctorGender">Gender</label>
+          <select
+            id="doctorGender"
             value={gender}
             onChange={(e) => setGender(e.target.value)}
-          />
+            r
+          >
+            <option value="" disabled>
+             Select Gender
+            </option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+            
+          </select>
         </div>
 
         <div className="form-group">
@@ -497,3 +541,5 @@ const AdminDashboard = () => {
 
 export default AdminDashboard;
 
+
+//right 

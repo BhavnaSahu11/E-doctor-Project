@@ -4,6 +4,7 @@ package Outpatient.example.Intership_Backend.Controller;
 import Outpatient.example.Intership_Backend.Advices.ApiError;
 import Outpatient.example.Intership_Backend.Entity.Appointment;
 import Outpatient.example.Intership_Backend.Entity.Doctor;
+import Outpatient.example.Intership_Backend.Repository.DoctorRepository;
 import Outpatient.example.Intership_Backend.Service.AppointmentService;
 import Outpatient.example.Intership_Backend.Service.DoctorService;
 import Outpatient.example.Intership_Backend.Service.PatientService;
@@ -29,7 +30,8 @@ public class DoctorController {
     @Autowired
     private AppointmentService appointmentService;
 
-
+    @Autowired
+    private DoctorRepository doctorRepository;
 
 
     @GetMapping("/get-welcome-email")
@@ -53,6 +55,9 @@ public class DoctorController {
 
     @PutMapping("/edit-profile")
     public ResponseEntity<ApiError> editDoctorProfile(@RequestBody @Valid Doctor doctor) {
+        //change
+        doctorRepository.save(doctor); // Save the updated doctor object
+        //change
         return doctorService.updateDoctorProfile(doctor);
     }
 

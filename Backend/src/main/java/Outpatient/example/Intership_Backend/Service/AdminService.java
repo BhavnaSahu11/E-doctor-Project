@@ -145,7 +145,50 @@ public boolean addDoctor(Doctor doctor) {
             return false;
         }
     }
+//add
+public boolean updatePatientProfileByAdmin(String id, Patient updatedPatient) {
+    Patient existingPatient = patientRepository.findById(id).orElse(null);
+    if (existingPatient == null) {
+        return false; // Patient not found
+    }
 
+    // Update patient details
+    existingPatient.setPatientName(updatedPatient.getPatientName());
+    existingPatient.setMobileNo(updatedPatient.getMobileNo());
+    existingPatient.setBloodGroup(updatedPatient.getBloodGroup());
+    existingPatient.setGender(updatedPatient.getGender());
+    existingPatient.setAge(updatedPatient.getAge());
+    existingPatient.setAddress(updatedPatient.getAddress());
+
+    patientRepository.save(existingPatient);
+    return true;
+}
+
+    // Method to get doctor details by email
+
+    public Optional<Doctor> getDoctorByEmail(String email) {
+        return Optional.ofNullable(doctorRepository.findByEmail(email)); // Returns Optional<Doctor>
+    }
+    // Method to update doctor profile
+    public Doctor updateDoctorProfile(String email, Doctor doctorDetails) {
+        Optional<Doctor> existingDoctorOpt = Optional.ofNullable(doctorRepository.findByEmail(email));
+        if (existingDoctorOpt.isPresent()) {
+            Doctor existingDoctor = existingDoctorOpt.get();
+            existingDoctor.setDoctorName(doctorDetails.getDoctorName());
+            existingDoctor.setSpeciality(doctorDetails.getSpeciality());
+            existingDoctor.setMobileNo(doctorDetails.getMobileNo());
+            existingDoctor.setGender(doctorDetails.getGender());
+            existingDoctor.setHospitalName(doctorDetails.getHospitalName());
+            existingDoctor.setLocation(doctorDetails.getLocation());
+            existingDoctor.setChargedPerVisit(doctorDetails.getChargedPerVisit());
+            // Save the updated doctor profile
+
+            
+            return doctorRepository.save(existingDoctor);
+        }
+        return null;
+    }
+    //add
 
 }
 

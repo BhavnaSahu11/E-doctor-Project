@@ -31,6 +31,9 @@ public class Doctor {
 
     private double chargedPerVisit;
 
+
+    private String gender; // New field for gender
+
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     @ToString.Exclude

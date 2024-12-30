@@ -222,4 +222,7 @@ public class PatientService {
     public int getCompletedAppointmentsCountByPatient() {
         return appointmentRepository.countByStatusAndPatientEmail("COMPLETED",loginEmail);
     }
+    //count
+
+
 }

@@ -110,6 +110,17 @@ public class PatientController {
     }
 
 
+    //new
+    @GetMapping("/get-patient/{email}")
+    public ResponseEntity<Patient> getPatientByEmail(@PathVariable String email) {
+        Patient patient = patientService.getPatientByEmail(email);
+        if (patient != null) {
+            return ResponseEntity.ok(patient);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 
 
 }

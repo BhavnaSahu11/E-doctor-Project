@@ -1,17 +1,21 @@
 package Outpatient.example.Intership_Backend.Controller;
 
+import Outpatient.example.Intership_Backend.Advices.ApiError;
 import Outpatient.example.Intership_Backend.Entity.Doctor;
 import Outpatient.example.Intership_Backend.Entity.Patient;
 import Outpatient.example.Intership_Backend.Service.AdminService;
 import Outpatient.example.Intership_Backend.Service.DoctorService;
 import Outpatient.example.Intership_Backend.Service.PatientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin/")
@@ -96,6 +100,54 @@ public class AdminController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding patient.");
         }
+
     }
+        //add
+
+        @PutMapping("/edit-patient-profile/{id}")
+        public ResponseEntity<ApiError> editPatientProfileByAdmin(
+                @PathVariable String id,
+                @RequestBody @Valid Patient updatedPatient) {
+            try {
+                boolean isUpdated = adminService.updatePatientProfileByAdmin(id, updatedPatient);
+                if (isUpdated) {
+                    return ResponseEntity.ok(new ApiError(HttpStatus.OK, "Patient profile updated successfully.", List.of()));
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body(new ApiError(HttpStatus.NOT_FOUND, "Patient not found.", List.of()));
+                }
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                                "Failed to update patient profile: " + e.getMessage(), List.of(e.getMessage())));
+            }
+        }
+
+    // Endpoint to get doctor details by email
+    @GetMapping("/get-doctor/{email}")
+    public ResponseEntity<Doctor> getDoctorByEmail(@PathVariable String email) {
+        Optional<Doctor> doctorOpt = adminService.getDoctorByEmail(email);
+
+        if (doctorOpt.isPresent()) {
+            return ResponseEntity.ok(doctorOpt.get()); // Return the doctor if found
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Return 404 if not found
+        }
+    }
+
+    // Endpoint to update doctor profile
+    @PutMapping("/edit-doctor-profile/{email}")
+    public ResponseEntity<Doctor> updateDoctorProfile(@PathVariable String email, @RequestBody Doctor doctorDetails) {
+        Optional<Doctor> updatedDoctorOpt = Optional.ofNullable(adminService.updateDoctorProfile(email, doctorDetails));
+
+        if (updatedDoctorOpt.isPresent()) {
+            return ResponseEntity.ok(updatedDoctorOpt.get()); // Return the updated doctor if found
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Return 404 if doctor not found
+        }
+    }
+
+
+
 
 }
