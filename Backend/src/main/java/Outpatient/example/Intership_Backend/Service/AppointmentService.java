@@ -1,14 +1,8 @@
 package Outpatient.example.Intership_Backend.Service;
 
 import Outpatient.example.Intership_Backend.Controller.NotificationController;
-import Outpatient.example.Intership_Backend.Entity.Appointment;
-import Outpatient.example.Intership_Backend.Entity.Doctor;
-import Outpatient.example.Intership_Backend.Entity.Notification;
-import Outpatient.example.Intership_Backend.Entity.Patient;
-import Outpatient.example.Intership_Backend.Repository.AppointmentRepository;
-import Outpatient.example.Intership_Backend.Repository.DoctorRepository;
-import Outpatient.example.Intership_Backend.Repository.NotificationRepository;
-import Outpatient.example.Intership_Backend.Repository.PatientRepository;
+import Outpatient.example.Intership_Backend.Entity.*;
+import Outpatient.example.Intership_Backend.Repository.*;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +28,9 @@ public class AppointmentService {
 
     @Autowired
     private DoctorRepository doctorRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
 
     @Autowired

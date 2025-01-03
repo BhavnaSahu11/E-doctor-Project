@@ -3,12 +3,15 @@ package Outpatient.example.Intership_Backend.Controller;
 
 import Outpatient.example.Intership_Backend.Entity.Appointment;
 import Outpatient.example.Intership_Backend.Entity.Doctor;
+import Outpatient.example.Intership_Backend.Entity.Payment;
 import Outpatient.example.Intership_Backend.Repository.AppointmentRepository;
 import Outpatient.example.Intership_Backend.Repository.DoctorRepository;
 import Outpatient.example.Intership_Backend.Repository.PatientRepository;
+import Outpatient.example.Intership_Backend.Repository.PaymentRepository;
 import Outpatient.example.Intership_Backend.Service.AppointmentService;
 import Outpatient.example.Intership_Backend.Service.DoctorService;
 import Outpatient.example.Intership_Backend.Service.PaymentService;
+import com.stripe.param.PaymentIntentRetrieveParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,10 @@ public class AppointmentController {
     private PatientRepository patientRepository;
 
     @Autowired
+    private PaymentRepository paymentRepository;
+
+
+    @Autowired
     private DoctorService doctorService;
     @PostMapping("/book")
     public ResponseEntity<String> bookAppointment(@RequestBody Appointment appointment) {
@@ -63,6 +70,17 @@ public class AppointmentController {
             } else if ("ONLINE_PAY".equalsIgnoreCase(appointment.getPaymentmode())) {
                 // If payment is Online, generate the payment URL
                 String paymentUrl = paymentService.createCheckoutSession(savedAppointment.getId().toString(), chargedPerVisit);
+                //add new
+
+                // Create a new Payment record and save it to the database
+                Payment payment = new Payment();
+                payment.setAmount(chargedPerVisit);
+                payment.setAppointmentId(savedAppointment.getId());
+                payment.setDoctorEmail(doctor.getEmail());
+                payment.setPatient(appointment.getPatient()); // Assuming Patient is already set in the Appointment object
+                paymentRepository.save(payment);
+                //add new
+
                 return new ResponseEntity<>(paymentUrl, HttpStatus.CREATED);
             } else {
                 return new ResponseEntity<>("Invalid payment mode", HttpStatus.BAD_REQUEST);
@@ -80,6 +98,10 @@ public class AppointmentController {
         return ResponseEntity.status(HttpStatus.FOUND).location(redirectUri).build();
 
         // return ResponseEntity.ok("Payment successful for appointment ID: " + appointmentId);
+
+        //new
+
+//new
     }
 //right
 

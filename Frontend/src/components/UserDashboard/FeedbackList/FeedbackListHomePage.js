@@ -46,13 +46,14 @@ const FeedbackListHomePage = () => {
     }
     return stars;
   };
-
   return (
     <div className="feedback-list-container">
-      {/* Header Section */}
+      
+     
       <div className="feedback-header">
         <h2>User Feedback</h2>
-        <p>Here you can see all the feedback provided by users</p>
+        {/* <p>Here you can see all the feedback provided by users</p> */}
+        <p>Explore real experiences from our users. Your feedback is always welcome!</p>
       </div>
 
       {error && <p className="error-message">{error}</p>}
