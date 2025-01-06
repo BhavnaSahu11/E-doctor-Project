@@ -257,7 +257,7 @@ const AdminDashboard = () => {
     <div className="dashboard-container">
       <div className="sidebar">
         <div className="profile-section">
-          <img src="assets/img/image.png" alt="Admin" className="profile-picture" />
+          <img src="assets/img/admin.png" alt="Admin" className="profile-picture" />
           <p className="admin-email">{adminEmail || "Loading Email..."}</p>
         </div>
         <ul className="menu-list">
