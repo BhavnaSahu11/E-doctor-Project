@@ -13,22 +13,58 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
+  const validateForm = () => {
+    if (!formData.appointmentDate) {
+      setError("Appointment date is required.");
+      return false;
+    }
+
+    const appointmentDate = new Date(formData.appointmentDate);
+    const availableFromDate = new Date(doctorAvailability.availableFromDate);
+    const availableEndDate = new Date(doctorAvailability.availableEndDate);
+
+ 
+
+    if (appointmentDate < availableFromDate || appointmentDate > availableEndDate) {
+      setError(
+        `Appointment date must be between ${doctorAvailability.availableFromDate} and ${doctorAvailability.availableEndDate}.`
+      );
+      return false;
+    }
+
+    if (!formData.reason.trim()) {
+      setError("Reason for the appointment is required.");
+      return false;
+    }
+
+    if (formData.reason.length > 100) {
+      setError("Reason cannot exceed 100 characters.");
+      return false;
+    }
+
+    if (formData.remarks.length > 300) {
+      setError("Remarks cannot exceed 300 characters.");
+      return false;
+    }
+
+    if (!["ONLINE_PAY", "CASH"].includes(formData.paymentmode)) {
+      setError("Invalid payment mode selected.");
+      return false;
+    }
+
+    setError(null);
+    return true;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent browser's native validation
 
-    const appointmentDate = new Date(formData.appointmentDate);
-    const availableFromDate = new Date(doctorAvailability.availableFromDate);
-    const availableEndDate = new Date(doctorAvailability.availableEndDate);
-
-    if (appointmentDate < availableFromDate || appointmentDate > availableEndDate) {
-      setError(`Appointment date must be between ${doctorAvailability.availableFromDate} and ${doctorAvailability.availableEndDate}.`);
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       const response = await fetch("http://localhost:8080/appointments/book", {
@@ -50,8 +86,6 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
         setTimeout(() => setSuccessMessage(null), 3000);
       } else if (formData.paymentmode === "ONLINE_PAY") {
         window.location.href = data; // Redirect to the payment URL
-      } else {
-        setError("Invalid payment mode selected.");
       }
 
       setFormData({
@@ -61,11 +95,9 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
         remarks: "",
         paymentmode: "ONLINE_PAY",
       });
-      setError(null);
     } catch (error) {
       console.error("Error creating appointment:", error);
       setError("Failed to create appointment. Please try again.");
-      setSuccessMessage(null);
     }
   };
 
@@ -86,7 +118,7 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
       {successMessage && <div className="success-message">{successMessage}</div>}
       {error && <div className="error-message">{error}</div>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="doctorEmail">Doctor Email:</label>
           <input type="email" id="doctorEmail" name="doctorEmail" value={formData.doctorEmail} readOnly />
@@ -100,7 +132,6 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
             name="appointmentDate"
             value={formData.appointmentDate}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -112,7 +143,6 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
             name="reason"
             value={formData.reason}
             onChange={handleChange}
-            required
           />
         </div>
 
@@ -133,7 +163,6 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
             name="paymentmode"
             value={formData.paymentmode}
             onChange={handleChange}
-            required
           >
             <option value="ONLINE_PAY">Online Payment</option>
             <option value="CASH">Cash</option>
@@ -141,10 +170,12 @@ const CreateAppointment = ({ doctorEmail, doctorAvailability, onBack }) => {
         </div>
 
         <button type="submit">Book Appointment</button>
-        <button type="button" onClick={onBack} className="back-button">Back to Doctor List</button>
+        <button type="button" onClick={onBack} className="back-button">
+          Back to Doctor List
+        </button>
       </form>
     </div>
   );
 };
-
 export default CreateAppointment;
+
