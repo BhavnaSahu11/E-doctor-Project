@@ -279,3 +279,19 @@ button {
 button:hover {
   background-color: #45a049;
 }
+
+
+
+.invalid {
+  border: 1px solid red;
+}
+
+.error-text {
+  color: red;
+  font-size: 19px;
+  margin-top: 5px;
+}
+
+
+
+

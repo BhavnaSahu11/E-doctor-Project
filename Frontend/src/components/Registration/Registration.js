@@ -321,7 +321,7 @@ const Registration = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter your username (3-50 characters)"
-            required
+            // required
           />
         </div>
         <div className="form-group">
